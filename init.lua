@@ -165,6 +165,101 @@ require("lazy").setup({
 	-- A few useful plugs for Python dev stolen from https://www.playfulpython.com/configuring-neovim-as-a-python-ide/
 	{ "nvim-tree/nvim-web-devicons", lazy = true },
 	{ "neoclide/coc.nvim", branch = "release" },
+	{
+		"xTacobaco/cursor-agent.nvim",
+		config = function()
+			vim.keymap.set("n", "<leader><Esc>", ":CursorAgent<CR>", { desc = "Cursor Agent: Toggle terminal" })
+			vim.keymap.set("v", "<leader><Esc>", ":CursorAgentSelection<CR>", { desc = "Cursor Agent: Send selection" })
+			vim.keymap.set("n", "<leader><S-Esc>", ":CursorAgentBuffer<CR>", { desc = "Cursor Agent: Send buffer" })
+		end,
+	},
+	{ "nvim-neotest/neotest-python" },
+	{
+		"nvim-neotest/neotest",
+		dependencies = {
+			"nvim-neotest/nvim-nio",
+			"nvim-lua/plenary.nvim",
+			"antoinemadec/FixCursorHold.nvim",
+			"nvim-treesitter/nvim-treesitter",
+			"mfussenegger/nvim-dap",
+			"mfussenegger/nvim-dap-python",
+		},
+		config = function()
+			require("neotest").setup({
+				adapters = {
+					require("neotest-python")({
+						dap = { justMyCode = false },
+						args = { "-v", "--log-level", "DEBUG" },
+						runner = "pytest",
+					}),
+				},
+			})
+			local dap = require("dap")
+			require("dap-python").setup()
+			require("dap-python").test_runner = "pytest"
+		end,
+		keys = {
+			{ "<leader>t", "", desc = "+test" },
+			{
+				"<leader>tt",
+				function()
+					require("neotest").output_panel.clear()
+					require("neotest").output_panel.open({ enter = true, auto_close = true })
+					require("neotest").run.run(vim.fn.expand("%"))
+				end,
+				desc = "Run File (Neotest)",
+			},
+			{
+				"<leader>tT",
+				function()
+					require("neotest").output_panel.clear()
+					require("neotest").output_panel.open({ enter = true, auto_close = true })
+					require("neotest").summary.open()
+					require("neotest").run.run(vim.uv.cwd())
+				end,
+				desc = "Run All Test Files (Neotest)",
+			},
+			{
+				"<leader>tr",
+				function()
+					require("neotest").output_panel.clear()
+					require("neotest").output_panel.open({ enter = true, auto_close = true })
+					require("neotest").run.run()
+				end,
+				desc = "Run Nearest (Neotest)",
+			},
+			{
+				"<leader>td",
+				function()
+					require("neotest").run.run({ strategy = "dap" })
+				end,
+				desc = "Debug (Neotest)",
+			},
+			{
+				"<leader>tl",
+				function()
+					require("neotest").output_panel.clear()
+					require("neotest").output_panel.open({ enter = true, auto_close = true })
+					require("neotest").run.run_last()
+				end,
+				desc = "Run Last (Neotest)",
+			},
+			{
+				"<leader>ts",
+				function()
+					require("neotest").summary.toggle()
+				end,
+				desc = "Toggle Summary (Neotest)",
+			},
+			{
+				"<leader>tS",
+				function()
+					require("neotest").run.stop()
+				end,
+				desc = "Stop (Neotest)",
+			},
+		},
+	},
 
 	-- NOTE: Plugins can also be added by using a table,
 	-- with the first argument being the link and the following
