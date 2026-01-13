@@ -173,6 +173,23 @@ require("lazy").setup({
 			vim.keymap.set("n", "<leader><S-Esc>", ":CursorAgentBuffer<CR>", { desc = "Cursor Agent: Send buffer" })
 		end,
 	},
+	{
+		"ibhagwan/fzf-lua",
+		-- optional for icon support
+		dependencies = { "nvim-tree/nvim-web-devicons" },
+		-- or if using mini.icons/mini.nvim
+		-- dependencies = { "nvim-mini/mini.icons" },
+		opts = {},
+		keys = {
+			{
+				"<leader>f",
+				function()
+					require("fzf-lua").files()
+				end,
+				desc = "Find [f]iles fuzzily",
+			},
+		},
+	},
 	{ "nvim-neotest/neotest-python" },
 	{
 		"nvim-neotest/neotest",
@@ -766,7 +783,7 @@ require("lazy").setup({
 		cmd = { "ConformInfo" },
 		keys = {
 			{
-				"<leader>f",
+				"<leader>F",
 				function()
 					require("conform").format({ async = true, lsp_format = "fallback" })
 				end,
@@ -910,7 +927,7 @@ require("lazy").setup({
 		config = function()
 			---@diagnostic disable-next-line: missing-fields
 			require("catppuccin").setup({
-				flavour = "auto",
+				flavour = "macchiato",
 				styles = {
 					comments = { "italic" },
 				},
@@ -1062,11 +1079,16 @@ require("lazy").setup({
 -- vim: ts=2 sts=2 sw=2 et
 -- Super oldschool vim ergonomics that I can't unlearn go first
 
---vim.keymap.set("n", "<Tab>", ":vsplit %:p:h<cr>")
---vim.keymap.set("n", "<S-Tab>", ":split %:p:h<cr>")
-vim.keymap.set("n", "<Tab>", ":Neotree toggle=true<cr>")
+vim.keymap.set("n", "<Tab>", ":vsplit %:p:h<cr>")
+vim.keymap.set("n", "<S-Tab>", ":split %:p:h<cr>")
+vim.keymap.set("n", "<leader>`", ":Neotree toggle=true<cr><C-W><C-J>")
 
+-- Shortcut for lazyvim
 vim.keymap.set("n", "<S-l>", ":Lazy<cr>")
+
+-- Terminal
+vim.keymap.set("n", "<leader>0v", [[<cmd>vsplit | term<cr>A]], { desc = "Open terminal in vertical split" })
+vim.keymap.set("n", "<leader>0h", [[<cmd>split | term<cr>A]], { desc = "Open terminal in horizontal split" })
 
 -- Split pane navigation
 vim.keymap.set("n", "`", "<C-w>")
@@ -1162,8 +1184,9 @@ vim.api.nvim_create_autocmd("CursorHold", {
 keyset("n", "<leader>rn", "<Plug>(coc-rename)", { silent = true })
 
 -- Formatting selected code
-keyset("x", "<leader>f", "<Plug>(coc-format-selected)", { silent = true })
-keyset("n", "<leader>f", "<Plug>(coc-format-selected)", { silent = true })
+-- TODO: Find a better keymap for this if I want to use it
+--keyset("x", "<leader>f", "<Plug>(coc-format-selected)", { silent = true })
+--keyset("n", "<leader>f", "<Plug>(coc-format-selected)", { silent = true })
 
 -- Setup formatexpr specified filetype(s)
 vim.api.nvim_create_autocmd("FileType", {
