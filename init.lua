@@ -179,14 +179,28 @@ require("lazy").setup({
 		dependencies = { "nvim-tree/nvim-web-devicons" },
 		-- or if using mini.icons/mini.nvim
 		-- dependencies = { "nvim-mini/mini.icons" },
-		opts = {},
+		opts = {
+			fzf_opts = {
+				["--history"] = vim.fn.stdpath("data") .. "/fzf-history",
+			},
+			files = {
+				no_ignore = true,
+			},
+		},
 		keys = {
 			{
 				"<leader>f",
 				function()
 					require("fzf-lua").files()
 				end,
-				desc = "Find [f]iles fuzzily",
+				desc = "Find [f]iles fuzzily (fzf)",
+			},
+			{
+				"<leader>h",
+				function()
+					require("fzf-lua").oldfiles()
+				end,
+				desc = "Open file [h]istory (fzf)",
 			},
 		},
 	},
@@ -375,7 +389,6 @@ require("lazy").setup({
 			spec = {
 				{ "<leader>s", group = "[S]earch" },
 				{ "<leader>t", group = "[T]oggle" },
-				{ "<leader>h", group = "Git [H]unk", mode = { "n", "v" } },
 			},
 		},
 	},
@@ -933,6 +946,11 @@ require("lazy").setup({
 				},
 				integrations = {
 					coc_nvim = true,
+				},
+				highlight_overrides = {
+					all = function(colors)
+						return {}
+					end,
 				},
 			})
 
