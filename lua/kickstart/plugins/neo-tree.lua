@@ -14,7 +14,15 @@ return {
     { '\\', ':Neotree reveal<CR>', desc = 'NeoTree reveal', silent = true },
   },
   opts = {
+    buffers = {
+      bind_to_cwd = false,
+    },
     filesystem = {
+      bind_to_cwd = false,
+      follow_current_file = {
+        enabled = true,
+        leave_dirs_open = false,
+      },
       filtered_items = {
         visible = true,
       },
